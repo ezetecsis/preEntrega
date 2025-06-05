@@ -6,7 +6,7 @@ public class Main {
     // Clase Producto
     static class Producto {
         private static int idCounter = 0;
-        private int id;
+        private final int id;
         private String nombre;
         private double precio;
         private int stock;
@@ -19,6 +19,7 @@ public class Main {
         }
 
         public int getId() { return id; }
+        @SuppressWarnings("unused")
         public String getNombre() { return nombre; }
         public void setNombre(String nombre) { this.nombre = nombre; }
         public double getPrecio() { return precio; }
@@ -33,25 +34,15 @@ public class Main {
     }
 
     // Clase LineaPedido
-    static class LineaPedido {
-        private Producto producto;
-        private int cantidad;
-
-        public LineaPedido(Producto producto, int cantidad) {
-            this.producto = producto;
-            this.cantidad = cantidad;
-        }
-
-        public Producto getProducto() { return producto; }
-        public int getCantidad() { return cantidad; }
+        record LineaPedido(Producto producto, int cantidad) {
     }
 
     // Clase Pedido
     static class Pedido {
         private static int idCounter = 0;
-        private int id;
-        private List<LineaPedido> lineas;
-        private Date fecha;
+        private final int id;
+        private final List<LineaPedido> lineas;
+        private final Date fecha;
 
         public Pedido() {
             this.id = ++idCounter;
@@ -70,7 +61,7 @@ public class Main {
         public double calcularTotal() {
             double total = 0;
             for (LineaPedido linea : lineas) {
-                total += linea.getProducto().getPrecio() * linea.getCantidad();
+                total += linea.producto().getPrecio() * linea.cantidad();
             }
             return total;
         }
